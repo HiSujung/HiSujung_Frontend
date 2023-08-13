@@ -1,13 +1,36 @@
-import React from 'react';
-import { Linking, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios';
 
-const openLink = () => {
-  Linking.openURL('#');
-};
-
+const API_URL = 'http://3.39.104.119:8080/member/login';
 
 export default function App() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(API_URL, {
+        email: username,
+        password: password,
+      });
+      console.log(username);
+      console.log(password);
+      if (response.data.success) {
+        // Login successful
+        Alert.alert('로그인 성공');
+      } else {
+        // Login failed
+        console.log(response.data.error);
+        Alert.alert('로그인 실패', '아이디 또는 비밀번호가 올바르지 않습니다.');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      Alert.alert('로그인 에러', '로그인 중에 오류가 발생했습니다.');
+    }
+  };
+
   return (
     <LinearGradient
       colors={['#E2D0F8', '#A0BFE0']}
@@ -17,14 +40,23 @@ export default function App() {
     >
       <View style={styles.container}>
         <Text style={styles.title}>Hi, 수정이</Text>
-        <TextInput style={styles.input} placeholder="아이디" />
-        <TextInput style={styles.input} placeholder="비밀번호" />
-        <TouchableOpacity style={styles.button}>
+        <TextInput
+          style={styles.input}
+          placeholder="아이디"
+          value={username}
+          onChangeText={text => setUsername(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="비밀번호"
+          value={password}
+          onChangeText={text => setPassword(text)}
+          secureTextEntry
+        />
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.link} onPress={openLink}>
-          <Text style={styles.linkText}>회원가입하기</Text>
-        </TouchableOpacity>
+        {/* ... */}
       </View>
     </LinearGradient>
   );
@@ -39,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 50,
     alignItems: 'center',
-    marginTop:80,
+    marginTop: 80,
   },
   title: {
     fontSize: 28,
@@ -68,11 +100,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
-  },
-  linkText:{
-    textDecorationLine: 'underline',
-    fontSize:15,
-    marginTop:10,
-    color: 'white',
   },
 });

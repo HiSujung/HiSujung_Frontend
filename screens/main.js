@@ -1,213 +1,170 @@
-import {StyleSheet, View, Text, Image} from 'react-native';
-import image23 from '../../assets/images/image23.png';
-import theme from '../../theme';
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-export function ____() {
+export default function App() {
   return (
-    <View style={styles.root}>
-      <Text style={styles.hi000_____}>
-        Hi, 000 수정이🔮
-      </Text>
-      <View style={styles.rectangle24}/>
-      <Text style={styles._______}>
-        오늘의 추천 활동
-      </Text>
-      <View style={styles.rectangle30}/>
-      <Text style={styles._______2}>
-        포트폴리오 
-        관리
-      </Text>
-      <View style={styles.rectangle31}/>
-      <View style={styles.rectangle32}/>
-      <Text style={styles.______}>
-        교내활동
-        조회
-      </Text>
-      <Text style={styles.______2}>
-        대외활동
-        조회
-      </Text>
-      <View style={styles.rectangle1}/>
-      <View style={styles.group61}>
-        <Text style={styles.____}>
-          대외활동
-        </Text>
-        <Text style={styles.d7}>
-          D-7
-        </Text>
-        <Text style={styles.______________}>
-          여행 관광 그리고.. 코딩단 단원 모집
-        </Text>
+    <LinearGradient
+      colors={['#E2D0F8', '#A0BFE0']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.linearGradient}
+    >
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Hi, 000 수정이🔮</Text>
       </View>
-      <Image source={{uri: image23}} style={{width: 52, height: 52}} contentFit="cover"/>
-      <View style={styles.rectangle33}/>
-      <Text style={styles.chatBot}>
-        chat
-        bot
-      </Text>
-    </View>
+      <View style={styles.container}>
+        <View style={styles.outerBox}>
+          <View style={styles.row}>
+            <TouchableOpacity style={[styles.button, styles.firstButton, { backgroundColor: '#CCA1FF', borderColor: 'transparent' }]}>
+              <Text style={styles.buttonText}>포트폴리오 관리</Text>
+            </TouchableOpacity>
+            <View style={styles.buttonGroup}>
+              <TouchableOpacity style={[styles.button, styles.secondButton, { backgroundColor: '#DAD2DE', borderColor: 'transparent' }]}>
+                <Text style={styles.buttonText}>교내활동 조회</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, styles.thirdButton, { backgroundColor: 'white', borderColor: '#6A6FB3' }]}>
+                <Text style={[styles.buttonText, { color: '#6A6FB3' }]}>대외활동 조회</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.content2}>
+            <Text style={styles.content2title}>오늘의 추천 활동</Text>
+            <View style={styles.innerContent}>
+              <TouchableOpacity style={styles.todayRecommand}>
+                <Text style={styles.innerSmalltxt}>대외활동</Text>
+                <Text style={styles.innerTitle}>포트폴리오 관리</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <TouchableOpacity style={styles.chatBotButton}>
+          <Text style={styles.chatBotButtonText}>chatBot</Text>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
 }
 
+const windowHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
-  root: {
-    width: 360,
-    height: 640,
+  linearGradient: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end', // 그라데이션 밑에 고정
   },
-  hi000_____: {
-    color: '#FFF',
-    fontFamily: 'NanumGothic',
-    fontSize: 30,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
+  titleContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    width: '100%',
+    zIndex: 1, // 텍스트를 다른 요소 위에 표시하기 위한 설정
   },
-  rectangle24: {
-    width: 360,
-    height: 550,
-    flexShrink: 0,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 0,
-    backgroundColor: '#FFF',
-    boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)',
+  title: {
+    fontSize: 28,
+    color: 'white',
+    fontWeight: '700',
+    textAlign: 'left',
+    letterSpacing: 9,
+    top: 80,
   },
-  _______: {
-    width: 146,
-    height: 33,
+  container: {
+    width: '100%',
+    height: '70%',
     flexDirection: 'column',
-    justifyContent: 'center',
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 15,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+    alignItems: 'center', // 중앙 정렬로 수정
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingBottom: 10, // 격차 줄임
   },
-  rectangle30: {
-    width: 146,
-    height: 214,
-    flexShrink: 0,
-    backgroundColor: '#CCA1FF',
+  outerBox: {
+    width: '110%', // 너비를 유지한 채로 85%로 변경
+    height: windowHeight * 0.85, // 화면 높이의 85%
+    backgroundColor: 'white',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingHorizontal: 20,
+    paddingTop: 10, // 격차 줄임
+    position: 'absolute', // 화면 바닥에 고정
+    bottom: 0,
+    flexDirection: 'column', // 버튼을 세로로 나열
+  },
+  row: {
+    flexDirection: 'row', // 버튼을 가로로 나열
+    justifyContent: 'space-between', // 버튼 간격을 벌리고 양쪽 정렬
+    marginBottom: 10, // 행 간격 조정
+  },
+  button: {
+    flex: 1, // 동일한 너비를 갖도록 설정
+    paddingVertical: 10,
     borderRadius: 10,
+    borderWidth: 2,
   },
-  _______2: {
-    width: 272,
-    height: 12,
-    flexShrink: 0,
-    color: '#FFF',
-    fontFamily: 'NanumGothic',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+  buttonGroup: {
+    flex: 1, // 동일한 높이를 갖도록 설정
+    flexDirection: 'column',
+    height: '400%', // 첫 번째 버튼은 2행을 차지
   },
-  rectangle31: {
-    width: 160,
-    height: 97,
-    flexShrink: 0,
-    backgroundColor: '#DAD2DE',
-    borderRadius: 10,
+  firstButton: {
+    height: '400%', // 첫 번째 버튼은 2행을 차지
+    marginBottom: 10, // 첫 번째 버튼 아래 여백 추가
   },
-  rectangle32: {
-    width: 160,
-    height: 97,
-    flexShrink: 0,
-    borderWidth: 1,
-    borderColor: '#6A6FB3',
-    borderStyle: 'solid',
-    borderRadius: 10,
+  secondButton: {
+    flex: 1, // 동일한 높이를 갖도록 설정
+    marginBottom: '4%',
+    marginLeft: '4%', // 오른쪽으로 이동하여 오른쪽 칸을 차지
   },
-  ______: {
-    width: 272,
-    height: 37,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+  thirdButton: {
+    flex: 1, // 동일한 높이를 갖도록 설정
+    marginLeft: '4%', // 오른쪽으로 이동하여 오른쪽 칸을 차지
   },
-  ______2: {
-    width: 272,
-    height: 37,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+  buttonText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  rectangle1: {
-    width: 319,
-    height: 78,
-    flexShrink: 0,
-    backgroundColor: '#F9EEFA',
-    borderRadius: 10,
+  content2: {
+    top:20,
+    marginTop: 200,
+    alignItems: 'center', // 중앙 정렬
   },
-  ____: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  d7: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  ______________: {
-    width: 272,
-    height: 12,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 14,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
-  },
-  group61: {
-    width: 320,
-    height: 37,
-    flexShrink: 0,
-  },
-  image23: {
-    width: 52,
-    height: 52,
-    flexShrink: 0,
-  },
-  rectangle33: {
-    width: 133,
-    height: 59,
-    flexShrink: 0,
-    backgroundColor: '#CCA1FF',
-    borderRadius: 20,
-  },
-  chatBot: {
-    width: 272,
-    height: 37,
-    flexShrink: 0,
-    color: '#FFF',
-    fontFamily: 'NanumGothic',
+  content2title: {
     fontSize: 20,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+    fontWeight: 'bold',
+  },
+  innerContent: {
+    flexDirection: 'row',
+    marginTop: 10,
+    alignItems: 'center', // 중앙 정렬
+  },
+  todayRecommand: {
+    flex: 1,
+    padding: 30,
+    borderRadius: 10,
+    backgroundColor: '#F9EEFA',
+    alignItems: 'center', // 중앙 정렬
+  },
+  innerSmalltxt: {
+    color: 'gray',
+    fontSize: 12,
+  },
+  innerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  chatBotButton: {
+    position: 'fixed',
+    bottom: 20,
+    left: 120,
+    width: 100,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#CCA1FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  chatBotButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

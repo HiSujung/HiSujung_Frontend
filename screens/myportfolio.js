@@ -1,354 +1,199 @@
-import {StyleSheet, View, Text, Image} from 'react-native';
-import image19 from '../../assets/images/image19.png';
-import image192 from '../../assets/images/image192.png';
-import image20 from '../../assets/images/image20.png';
-import image18 from '../../assets/images/image18.png';
-import plus21 from '../../assets/images/plus21.png';
-import freeIconHome7478463 from '../../assets/images/freeIconHome7478463.png';
-import theme from '../../theme';
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { AntDesign } from '@expo/vector-icons';
 
-export function _______() {
+const openLink = () => {
+  // Linking.openURL('#');
+};
+
+export default function App() {
   return (
-    <View style={styles.root}>
-      <View style={styles.rectangle23}/>
-      <View style={styles.rectangle24}/>
-      <View style={styles.rectangle4}/>
-      <Text style={styles.____}>
-        저장하기
-      </Text>
-      <Text style={styles._______}>
-        포트폴리오 관리
-      </Text>
-      <Text style={styles._____}>
-        서가은 수정
-      </Text>
-      <Text style={styles._____1}>
-        포트폴리오1
-      </Text>
-      <Text style={styles._____12}>
-        포트폴리오1
-      </Text>
-      <Text style={styles._______2}>
-        포트폴리오 제목
-      </Text>
-      <Text style={styles._______3}>
-        포트폴리오 링크
-      </Text>
-      <Text style={styles._____________}>
-        열심히 해보겠습니다 아자아자!
-      </Text>
-      <Text style={styles.httpsWwwFigmaComFileOAKfjVxDqa0K644Kr7QdIiUntitled}>
-        https://www.figma.com/file/oAKfjVxDQA0K644kr7qdII/Untitled...
-      </Text>
-      <Image source={{uri: image19}} style={{width: 20, height: 20}} contentFit="cover"/>
-      <View style={styles.group63}>
-        <View style={styles.rectangle26}/>
-        <View style={styles.rectangle27}/>
-        <Image source={{uri: image192}} style={{width: 16, height: 16}} contentFit="cover"/>
-        <View style={styles.rectangle28}/>
-        <View style={styles.rectangle29}/>
-        <Text style={styles._____________2}>
-          열심히 
-          해보겠습니다
-          아자아자!
-        </Text>
-        <Text style={styles.______}>
-          아무나 데려가
-        </Text>
-        <Text style={styles.___}>
-          안녕녕
-        </Text>
-        <Image source={{uri: image20}} style={{width: 16, height: 16}} contentFit="cover"/>
-        <Image source={{uri: image18}} style={{width: 16, height: 16}} contentFit="cover"/>
-        <Text style={styles._____13}>
-          포트폴리오1
-        </Text>
-        <Text style={styles._____2}>
-          포트폴리오2
-        </Text>
-        <Text style={styles._____3}>
-          포트폴리오3
-        </Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.homeButton}>
+          <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>포트폴리오 관리</Text>
       </View>
-      <Image source={{uri: plus21}} style={{width: 16, height: 16}} contentFit="cover"/>
-      <View style={styles.rectangle5899}/>
-      <Image source={{uri: freeIconHome7478463}} style={{width: 40, height: 23}} contentFit="cover"/>
+      <View style={styles.nav}>
+        <LinearGradient
+          colors={['#E2D0F8', '#A0BFE0']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.linearGradient}
+        >
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navContent}>
+            <TouchableOpacity style={styles.navButton}>
+              <Text style={styles.navButtonText}>포트폴리오1</Text>
+              <Text style={styles.portfolioNavTitle}>작게 포트폴리오 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton}>
+              <Text style={styles.navButtonText}>포트폴리오2</Text>
+              <Text style={styles.portfolioNavTitle}>큰 포트폴리오 2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navButton}>
+              <Text style={styles.navButtonText}>포트폴리오3</Text>
+              <Text style={styles.portfolioNavTitle}>중간 포트폴리오 3</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navButtonPlus}>
+              <Text style={styles.navButtonTextPlus}>추가</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </LinearGradient>
+      </View>
+
+      <View style={styles.main}>
+        <View style={styles.portfolioInfo}>
+          <Text style={styles.portfolioName}>포트폴리오 1</Text>
+          <TouchableOpacity style={styles.editButton}>
+            <Text style={styles.editButtonText}>수정</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.name}>서가은 수정</Text>
+        <Text style={styles.infoLabel}>포트폴리오 제목</Text>
+        <TextInput style={styles.infoInput} />
+        <Text style={styles.infoLabel}>포트폴리오 링크</Text>
+        <TextInput style={styles.infoInput} />
+        <Text style={styles.infoLabel}>내용</Text>
+        <TextInput style={styles.bigInfoInput} multiline numberOfLines={4} />
+        <TouchableOpacity style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>저장하기</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
-    width: 360,
-    height: 640,
+  container: {
+    flex: 1,
   },
-  rectangle23: {
-    width: 360,
-    height: 61,
-    flexShrink: 0,
-    backgroundColor: '#FFF',
+  linearGradient: {
+    flex: 1,
   },
-  rectangle24: {
-    width: 360,
-    height: 517,
-    flexShrink: 0,
-    backgroundColor: '#FFF',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
   },
-  rectangle4: {
-    width: 114,
-    height: 33,
-    flexShrink: 0,
-    backgroundColor: '#A0BFE0',
+  homeButton: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  headerTitle: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  nav: {
+    height: 80,
+    borderBottomWidth: 1,
+    borderBottomColor: 'white',
+    overflow: 'hidden',
+  },
+  navContent: {
+    alignItems: 'flex-start',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  navButton: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    marginBottom:10,
+  },
+  navButtonText: {
+    color: 'rgba(74, 85, 162, 1)',
+    fontWeight: 'bold',
+  },
+  navButtonPlus: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'white',
+    borderStyle: 'dotted',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    marginBottom:10,
+  },
+  navButtonTextPlus: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  main: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    backgroundColor: 'white',
+  },
+  portfolioInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  portfolioName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  editButton: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  editButtonText: {
+    color: 'rgba(74, 85, 162, 1)',
+    fontWeight: 'bold',
+  },
+  name: {
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  infoLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  infoInput: {
+    backgroundColor: 'rgba(226, 208, 248, 0.3)',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    marginBottom: 10,
+  },
+  bigInfoInput: {
+    backgroundColor: 'rgba(226, 208, 248, 0.3)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    textAlignVertical: 'top',
+  },
+  saveButton: {
+    backgroundColor: 'rgba(160, 191, 224, 1)',
     borderRadius: 20,
-  },
-  ____: {
-    width: 132,
-    height: 74,
-    flexDirection: 'column',
+    paddingVertical: 10,
     justifyContent: 'center',
-    flexShrink: 0,
-    color: '#FFF',
-    textAlign: 'center',
-    fontFamily: 'NanumGothic',
-    fontSize: 15,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+    alignItems: 'center',
   },
-  _______: {
-    width: 132,
-    height: 74,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    flexShrink: 0,
-    color: '#000',
-    textAlign: 'center',
-    fontFamily: 'NanumGothic',
-    fontSize: 17,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
+  saveButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
-  _____: {
-    width: 132,
-    height: 74,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    flexShrink: 0,
-    color: '#000',
-    textAlign: 'center',
-    fontFamily: 'NanumGothic',
-    fontSize: 17,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _____1: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _____12: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _______2: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _______3: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _____________: {
-    width: 272,
-    height: 12,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 15,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  httpsWwwFigmaComFileOAKfjVxDqa0K644Kr7QdIiUntitled: {
-    width: 315,
-    height: 12,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  image19: {
-    width: 20,
-    height: 20,
-    flexShrink: 0,
-  },
-  rectangle26: {
-    width: 79,
-    height: 59,
-    flexShrink: 0,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-  },
-  rectangle27: {
-    width: 79,
-    height: 59,
-    flexShrink: 0,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-  },
-  image192: {
-    width: 16,
-    height: 16,
-    flexShrink: 0,
-  },
-  rectangle28: {
-    width: 79,
-    height: 59,
-    flexShrink: 0,
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-  },
-  rectangle29: {
-    width: 79,
-    height: 59,
-    flexShrink: 0,
-    borderWidth: 1,
-    borderColor: '#FFF',
-    borderStyle: 'dashed',
-    borderRadius: 10,
-  },
-  _____________2: {
-    width: 73,
-    height: 30,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
-  },
-  ______: {
-    width: 73,
-    height: 30,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
-  },
-  ___: {
-    width: 73,
-    height: 30,
-    flexShrink: 0,
-    color: '#000',
-    fontFamily: 'NanumGothic',
-    fontSize: 10,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 'normal',
-  },
-  image20: {
-    width: 16,
-    height: 16,
-    flexShrink: 0,
-  },
-  image18: {
-    width: 16,
-    height: 16,
-    flexShrink: 0,
-  },
-  _____13: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 7,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _____2: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 7,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  _____3: {
-    width: 75,
-    height: 12,
-    flexShrink: 0,
-    color: '#5B5B5B',
-    fontFamily: 'NanumGothic',
-    fontSize: 7,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 'normal',
-  },
-  group63: {
-    width: 334,
-    height: 59,
-    flexShrink: 0,
-  },
-  plus21: {
-    width: 16,
-    height: 16,
-    flexShrink: 0,
-  },
-  rectangle5899: {
-    width: 315,
-    height: 161,
-    flexShrink: 0,
-    borderWidth: 1,
-    borderColor: '#7895CB',
-    borderStyle: 'solid',
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-  },
-  freeIconHome7478463: {
-    width: 40,
-    height: 23,
-    flexShrink: 0,
-    backgroundBlendMode: 'multiply',
+  portfolioNavTitle: {
+    color: 'rgba(74, 85, 162, 1)',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
 });
