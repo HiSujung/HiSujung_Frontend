@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import EmailScreen from './myportfolio'; // email.js 파일을 가져오기
 
-export default function App() {
+function HomeScreen({ navigation }) {
   return (
     <LinearGradient
       colors={['#E2D0F8', '#A0BFE0']}
@@ -16,15 +19,15 @@ export default function App() {
       <View style={styles.container}>
         <View style={styles.outerBox}>
           <View style={styles.row}>
-            <TouchableOpacity style={[styles.button, styles.firstButton, { backgroundColor: '#CCA1FF', borderColor: 'transparent' }]}>
-              <Text style={styles.buttonText}>포트폴리오 관리</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('EmailScreen')} style={[styles.button, styles.firstButton, { backgroundColor: '#CCA1FF', borderColor: 'transparent' }]}>
+              <Text style={styles.buttonText}>포트폴리오 {'\n'} 관리</Text>
             </TouchableOpacity>
             <View style={styles.buttonGroup}>
               <TouchableOpacity style={[styles.button, styles.secondButton, { backgroundColor: '#DAD2DE', borderColor: 'transparent' }]}>
-                <Text style={styles.buttonText}>교내활동 조회</Text>
+                <Text style={styles.buttonText}>교내활동 {'\n'} 조회</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.button, styles.thirdButton, { backgroundColor: 'white', borderColor: '#6A6FB3' }]}>
-                <Text style={[styles.buttonText, { color: '#6A6FB3' }]}>대외활동 조회</Text>
+                <Text style={[styles.buttonText, { color: '#6A6FB3' }]}>대외활동 {'\n'} 조회</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -46,6 +49,27 @@ export default function App() {
   );
 }
 
+const Stack = createStackNavigator();
+
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }} // 라우트 이름 숨기기
+        />
+        <Stack.Screen
+          name="EmailScreen"
+          component={EmailScreen}
+          options={{ headerShown: false }} // 라우트 이름 숨기기
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({

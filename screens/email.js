@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimens
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
+import { useAuth } from './../utils/AuthContext';
+
 
 export default function App() {
   const [email, setEmail] = useState("");

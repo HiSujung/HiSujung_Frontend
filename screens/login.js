@@ -5,23 +5,39 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import EmailScreen from './email'; // email.js 파일을 가져오기
+import EmailScreen from './myportfolio'; // email.js 파일을 가져오기
+import { useAuth } from './../utils/AuthContext';
 
 const API_URL = 'http://3.39.104.119:8080/member/login';
 
 function HomeScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorText, setShowErrorText] = useState(false);
+  const { login } = useAuth(); // useAuth 훅을 통해 AuthContext 사용
 
   const handleLogin = async () => {
+    if (!username) {
+      setShowErrorText(true);
+      return;
+    }
+  
     try {
       const response = await axios.post(API_URL, {
-        email: username,
-        password: password,
+        email: String(username),
+        password: String(password),
       });
-      console.log(username);
-      console.log(password);
+  
+      setShowSuccessMessage(true);
+      setShowErrorText(false);
+  
       if (response.data.success) {
+        console.log('Login successful');
+        const token = response.data.token;
+        const userInfo = { id: response.data.userId, name: response.data.username }; // 사용자 정보
+        login(token, userInfo); // 토큰 및 사용자 정보 저장
+
         // Login successful
         Alert.alert('로그인 성공');
       } else {
@@ -34,7 +50,7 @@ function HomeScreen({ navigation }) {
       Alert.alert('로그인 에러', '로그인 중에 오류가 발생했습니다.');
     }
   };
-
+  
   return (
     <LinearGradient
       colors={['#E2D0F8', '#A0BFE0']}

@@ -1,13 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
-
-const openLink = () => {
-  // Linking.openURL('#');
-};
+import axios from 'axios';
 
 export default function App() {
+  const [navigationButtons, setNavigationButtons] = useState([]);
+  const [selectedButton, setSelectedButton] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedTitle, setEditedTitle] = useState('');
+  const [editedSubTitle, setEditedSubTitle] = useState('');
+  const [editedContent, setEditedContent] = useState('');
+
+  const addNavigationButton = () => {
+    const newButton = {
+      title: `포트폴리오${navigationButtons.length + 1}`,
+      subTitle: `새로운 포트폴리오 ${navigationButtons.length + 1}`,
+      content: `새로운 내용 ${navigationButtons.length + 1}`,
+    };
+
+    setNavigationButtons([...navigationButtons, newButton]);
+  };
+
+  const handleButtonPress = (button) => {
+    setSelectedButton(button);
+    setIsEditMode(false);
+    setEditedTitle(button.title);
+    setEditedSubTitle(button.subTitle);
+    setEditedContent(button.content);
+  };
+
+  const toggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
+
+  const handleTitleChange = (text) => {
+    setEditedTitle(text);
+  };
+
+  const handleSubTitleChange = (text) => {
+    setEditedSubTitle(text);
+  };
+
+  const handleContentChange = (text) => {
+    setEditedContent(text);
+  };
+
+  const handleSaveButton = async () => {
+    const updatedButtons = navigationButtons.map((button) => {
+      if (button === selectedButton) {
+        return { ...button, title: editedTitle, subTitle: editedSubTitle, content: editedContent };
+      }
+      return button;
+    });
+
+    setNavigationButtons(updatedButtons);
+    setIsEditMode(false);
+
+    const data = {
+      title: String(editedTitle),
+      urllink: String(editedSubTitle),
+      description: String(editedContent),
+    };
+
+    try {
+      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', data);
+      console.log('서버 응답 데이터:', response.data);
+
+      // 여기서 서버 응답 데이터를 활용할 수 있습니다.
+      // 예: 성공 메시지를 출력하거나 다른 동작을 수행할 수 있습니다.
+    } catch (error) {
+      console.error('에러 발생:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -24,19 +90,20 @@ export default function App() {
           style={styles.linearGradient}
         >
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navContent}>
-            <TouchableOpacity style={styles.navButton}>
-              <Text style={styles.navButtonText}>포트폴리오1</Text>
-              <Text style={styles.portfolioNavTitle}>작게 포트폴리오 1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navButton}>
-              <Text style={styles.navButtonText}>포트폴리오2</Text>
-              <Text style={styles.portfolioNavTitle}>큰 포트폴리오 2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navButton}>
-              <Text style={styles.navButtonText}>포트폴리오3</Text>
-              <Text style={styles.portfolioNavTitle}>중간 포트폴리오 3</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.navButtonPlus}>
+            {navigationButtons.map((button, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.navButton,
+                  selectedButton === button && styles.selectedNavButton,
+                ]}
+                onPress={() => handleButtonPress(button)}
+              >
+                <Text style={styles.navButtonText}>{button.title}</Text>
+                <Text style={styles.portfolioNavTitle}>{button.subTitle}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.navButtonPlus} onPress={addNavigationButton}>
               <Text style={styles.navButtonTextPlus}>추가</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -45,26 +112,44 @@ export default function App() {
 
       <View style={styles.main}>
         <View style={styles.portfolioInfo}>
-          <Text style={styles.portfolioName}>포트폴리오 1</Text>
-          <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>수정</Text>
+          <Text style={styles.portfolioName}>{editedTitle}</Text>
+          <TouchableOpacity style={styles.editButton} onPress={toggleEditMode}>
+            <Text style={styles.editButtonText}>{isEditMode ? '완료' : '수정'}</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.name}>서가은 수정</Text>
         <Text style={styles.infoLabel}>포트폴리오 제목</Text>
-        <TextInput style={styles.infoInput} />
+        <TextInput
+          style={styles.infoInput}
+          value={editedTitle}
+          onChangeText={handleTitleChange}
+          editable={isEditMode}
+        />
         <Text style={styles.infoLabel}>포트폴리오 링크</Text>
-        <TextInput style={styles.infoInput} />
+        <TextInput
+          style={styles.infoInput}
+          value={editedSubTitle}
+          onChangeText={handleSubTitleChange}
+          editable={isEditMode}
+        />
         <Text style={styles.infoLabel}>내용</Text>
-        <TextInput style={styles.bigInfoInput} multiline numberOfLines={4} />
-        <TouchableOpacity style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>저장하기</Text>
-        </TouchableOpacity>
+        <TextInput
+          style={styles.bigInfoInput}
+          multiline
+          numberOfLines={4}
+          value={editedContent}
+          onChangeText={handleContentChange}
+          editable={isEditMode}
+        />
+        {isEditMode && (
+          <TouchableOpacity style={styles.saveButton} onPress={handleSaveButton}>
+            <Text style={styles.saveButtonText}>저장하기</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -77,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: 'white',
   },
@@ -86,12 +171,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 10,
+    marginTop:20,
   },
   headerTitle: {
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+    marginTop:10,
   },
   nav: {
     height: 80,
