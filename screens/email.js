@@ -10,6 +10,51 @@ export default function App() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorText, setShowErrorText] = useState(false);
 
+  const handleEmailSubmit = async () => {
+    if (!email) {
+      setShowErrorText(true);
+      return;
+    }
+
+    try {
+      const fullEmail = email + "@sungshin.ac.kr";
+
+      const response = await axios.post('http://3.39.104.119:8080/member/join/mailConfirm', null, {
+        params: {
+          email: fullEmail,
+        },
+      });
+
+      setShowSuccessMessage(true);
+      setShowErrorText(false);
+
+      console.log('이메일 전송 응답:', response.data);
+    } catch (error) {
+      console.error('이메일 전송 오류:', error);
+      Alert.alert('오류', '이메일 전송에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleVerificationSubmit = async () => {
+    try {
+      const response = await axios.get(`http://3.39.104.119:8080/member/join/verify/${verificationCode}`);
+      console.log(response.data);
+      if (response.data === String(verificationCode)) {
+        
+        setShowSuccessMessage(true);
+        setShowErrorText(false);
+      } else {
+        setShowSuccessMessage(false);
+        setShowErrorText(true);
+      }
+    } catch (error) {
+      console.error('인증 제출 오류:', error);
+      setShowSuccessMessage(false);
+      setShowErrorText(true);
+    }
+  };
+
+  const windowWidth = Dimensions.get('window').width;
 
   return (
     <LinearGradient

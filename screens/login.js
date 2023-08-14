@@ -1,11 +1,15 @@
+// App.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import EmailScreen from './email'; // email.js 파일을 가져오기
 
 const API_URL = 'http://3.39.104.119:8080/member/login';
 
-export default function App() {
+function HomeScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -56,12 +60,34 @@ export default function App() {
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
-        {/* ... */}
+        <TouchableOpacity onPress={() => navigation.navigate('EmailScreen')}>
+          <Text style={styles.signupText}>계정이 없으신가요? <Text style={styles.signupLink}>회원가입</Text></Text>
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
 }
 
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }} // 라우트 이름 숨기기
+        />
+        <Stack.Screen
+          name="EmailScreen"
+          component={EmailScreen}
+          options={{ headerShown: false }} // 라우트 이름 숨기기
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
@@ -100,5 +126,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
+  },
+  signupText: {
+    marginTop: 20,
+    color: 'white',
+    fontSize: 16,
+  },
+  signupLink: {
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });
