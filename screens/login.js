@@ -1,12 +1,10 @@
-/* // App.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import EmailScreen from './myportfolio'; // email.js 파일을 가져오기
-import { useAuth } from './../utils/AuthContext';
+import EmailScreen from './email'; // email.js 파일을 가져오기
 
 const API_URL = 'http://3.39.104.119:8080/member/login';
 
@@ -15,42 +13,44 @@ function HomeScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorText, setShowErrorText] = useState(false);
-  const { login } = useAuth(); // useAuth 훅을 통해 AuthContext 사용
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
-    if (!username) {
+    if (!username || !password) {
       setShowErrorText(true);
       return;
     }
-  
+
     try {
       const response = await axios.post(API_URL, {
         email: String(username),
         password: String(password),
       });
-  
+
       setShowSuccessMessage(true);
       setShowErrorText(false);
-  
-      if (response.data.success) {
-        console.log('Login successful');
-        const token = response.data.token;
-        const userInfo = { id: response.data.userId, name: response.data.username }; // 사용자 정보
-        login(token, userInfo); // 토큰 및 사용자 정보 저장
 
+      console.log(username);
+      console.log(password);
+      if (response.data.success) {
         // Login successful
         Alert.alert('로그인 성공');
       } else {
         // Login failed
-        console.log(response.data.error);
-        Alert.alert('로그인 실패', '아이디 또는 비밀번호가 올바르지 않습니다.');
+        if (response.data.error) {
+          console.log(response.data.error);
+          setErrorMessage(response.data.error); // Set the error message from the server
+        } else {
+          setErrorMessage('아이디 또는 비밀번호가 올바르지 않습니다.');
+        }
+        Alert.alert('로그인 실패', errorMessage);
       }
     } catch (error) {
       console.error('Error logging in:', error);
       Alert.alert('로그인 에러', '로그인 중에 오류가 발생했습니다.');
     }
   };
-  
+
   return (
     <LinearGradient
       colors={['#E2D0F8', '#A0BFE0']}
@@ -104,6 +104,7 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
 const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
@@ -153,4 +154,3 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
- */
