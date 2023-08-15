@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import EmailScreen from './myportfolio'; // email.js 파일을 가져오기
+import { NavigationContainer } from '@react-navigation/native';
+import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
 
-function HomeScreen({ navigation }) {
+const Stack = createStackNavigator();
+
+function MainComponent({ navigation }) {
   return (
     <LinearGradient
       colors={['#E2D0F8', '#A0BFE0']}
@@ -19,7 +21,7 @@ function HomeScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.outerBox}>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => navigation.navigate('EmailScreen')} style={[styles.button, styles.firstButton, { backgroundColor: '#CCA1FF', borderColor: 'transparent' }]}>
+            <TouchableOpacity onPress={() => navigation.navigate('myportfolioScreen')} style={[styles.button, styles.firstButton, { backgroundColor: '#CCA1FF', borderColor: 'transparent' }]}>
               <Text style={styles.buttonText}>포트폴리오 {'\n'} 관리</Text>
             </TouchableOpacity>
             <View style={styles.buttonGroup}>
@@ -49,27 +51,6 @@ function HomeScreen({ navigation }) {
   );
 }
 
-const Stack = createStackNavigator();
-
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ headerShown: false }} // 라우트 이름 숨기기
-        />
-        <Stack.Screen
-          name="EmailScreen"
-          component={EmailScreen}
-          options={{ headerShown: false }} // 라우트 이름 숨기기
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
 const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
@@ -148,7 +129,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   content2: {
-    top:20,
+    top: 20,
     marginTop: 200,
     alignItems: 'center', // 중앙 정렬
   },
@@ -192,3 +173,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen
+            name="myportfolioScreen"
+            component={myportfolioScreen}
+            options={{ headerShown: false }}
+          />
+        <Stack.Screen
+          name="Main"
+          component={MainComponent}
+          options={{ headerShown: false }}
+        />
+
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

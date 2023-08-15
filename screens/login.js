@@ -1,12 +1,24 @@
+// App.js
+
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import EmailScreen from './email'; // email.js 파일을 가져오기
 
 const API_URL = 'http://3.39.104.119:8080/member/login';
+
+import MainComponent from './myportfolio'; // main.js 파일의 컴포넌트를 import
+
+function EmailScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>회원가입</Text>
+      {/* 이곳에 회원가입 화면 내용을 작성하십시오. */}
+    </View>
+  );
+}
 
 function HomeScreen({ navigation }) {
   const [username, setUsername] = useState('');
@@ -27,27 +39,26 @@ function HomeScreen({ navigation }) {
         password: String(password),
       });
 
-      setShowSuccessMessage(true);
-      setShowErrorText(false);
-
-      console.log(username);
-      console.log(password);
-      if (response.data.success) {
-        // Login successful
-        Alert.alert('로그인 성공');
+      if (response.data.token) {
+        setShowSuccessMessage(true);
+        setShowErrorText(false);
+        setErrorMessage('');
+        navigation.navigate('Main'); // main.js 화면으로 이동
       } else {
-        // Login failed
+        setShowSuccessMessage(false);
+        setShowErrorText(true);
+
         if (response.data.error) {
-          console.log(response.data.error);
-          setErrorMessage(response.data.error); // Set the error message from the server
+          setErrorMessage(response.data.error);
         } else {
           setErrorMessage('아이디 또는 비밀번호가 올바르지 않습니다.');
         }
-        Alert.alert('로그인 실패', errorMessage);
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      Alert.alert('로그인 에러', '로그인 중에 오류가 발생했습니다.');
+      setErrorMessage('로그인 중에 오류가 발생했습니다.');
+      setShowSuccessMessage(false);
+      setShowErrorText(true);
     }
   };
 
@@ -59,7 +70,7 @@ function HomeScreen({ navigation }) {
       style={styles.linearGradient}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Hi, 수정이</Text>
+        <Text style={styles.title}>안녕, 수정이</Text>
         <TextInput
           style={styles.input}
           placeholder="아이디"
@@ -76,6 +87,12 @@ function HomeScreen({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
+        {showSuccessMessage && (
+          <Text style={styles.successMessage}>로그인 성공</Text>
+        )}
+        {showErrorText && (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        )}
         <TouchableOpacity onPress={() => navigation.navigate('EmailScreen')}>
           <Text style={styles.signupText}>계정이 없으신가요? <Text style={styles.signupLink}>회원가입</Text></Text>
         </TouchableOpacity>
@@ -90,15 +107,21 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
+
+        <Stack.Screen
+          name="Main"
+          component={MainComponent}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ headerShown: false }} // 라우트 이름 숨기기
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="EmailScreen"
           component={EmailScreen}
-          options={{ headerShown: false }} // 라우트 이름 숨기기
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -143,6 +166,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
+  },
+  successMessage: {
+    color: 'green',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
   },
   signupText: {
     marginTop: 20,

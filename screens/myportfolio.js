@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
+import { useAuth } from './../utils/AuthContext';
 
 export default function App() {
   const [navigationButtons, setNavigationButtons] = useState([]);
@@ -11,6 +12,8 @@ export default function App() {
   const [editedTitle, setEditedTitle] = useState('');
   const [editedSubTitle, setEditedSubTitle] = useState('');
   const [editedContent, setEditedContent] = useState('');
+  const { token } = useAuth(); // 현재 로그인한 유저의 user, token
+
 
   const addNavigationButton = () => {
     const newButton = {
@@ -64,7 +67,7 @@ export default function App() {
     };
 
     try {
-      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', data);
+      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', token);
       console.log('서버 응답 데이터:', response.data);
 
       // 여기서 서버 응답 데이터를 활용할 수 있습니다.
