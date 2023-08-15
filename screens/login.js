@@ -1,4 +1,4 @@
-// App.js
+/* // App.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -153,3 +153,4 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
+ */

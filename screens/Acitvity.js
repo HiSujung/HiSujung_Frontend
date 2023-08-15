@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native';  // Import TouchableOpacity
-
 
 export default function App() {
   return (
@@ -44,8 +42,31 @@ export default function App() {
             </Text>
           </TouchableOpacity>
           {/* 활동 2 */}
+          
           {/* 활동 3 */}
         </ScrollView>
+
+        {/* 추천 게시물 */}
+        <View style={styles.recommended}>
+          <Text style={styles.recommendedTitle}>추천 게시물</Text>
+          <TouchableOpacity style={styles.recommendedItem}>
+            <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
+            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
+          </TouchableOpacity>
+          {/* 여기에 3개 더 추가 */}
+          <TouchableOpacity style={styles.recommendedItem}>
+            <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
+            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.recommendedItem}>
+            <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
+            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.recommendedItem}>
+            <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
+            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -110,15 +131,15 @@ const styles = StyleSheet.create({
   activityList: {
     flexDirection: 'column',
     alignItems: 'stretch',
-    height: '80%',
+    height: '80%', // Adjusted height to make room for recommended items
   },
   activityItem: {
     width: '100%',
-    height: '100%',
+    height: 700, // Adjusted height for the activity item
     backgroundColor: 'rgba(226, 208, 248, 0.3)',
     borderRadius: 10,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     marginBottom: 10,
   },
   activityDetails: {
@@ -144,5 +165,30 @@ const styles = StyleSheet.create({
   },
   activityDescription: {
     fontSize: 14,
+  },
+  recommended: {
+    marginTop: 20,
+    marginBottom: 30,
+    paddingHorizontal: 20, // Added paddingHorizontal to center the recommended items
+  },
+  recommendedTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  recommendedItem: {
+    backgroundColor: 'rgba(226, 208, 248, 0.3)',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 5,
+  },
+  recommendedItemTitle: {
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  recommendedItemDate: {
+    fontSize: 12,
+    color: 'rgba(74, 85, 162, 1)',
   },
 });
