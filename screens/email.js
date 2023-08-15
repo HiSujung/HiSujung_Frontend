@@ -32,7 +32,7 @@ export default function EmailScreen() {
 
       console.log('이메일 전송 응답:', response.data);
 
-      navigation.navigate('Register', { email: fullEmail });
+      navigation.navigate('Register', { email: fullEmail }); //인증 성공시, email 회원가입 창으로 넘김
     } catch (error) {
       console.error('이메일 전송 오류:', error);
       Alert.alert('오류', '이메일 전송에 실패했습니다. 다시 시도해주세요.');
