@@ -1,291 +1,192 @@
+// App.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
-import { useAuth } from './../utils/AuthContext';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useAuth, AuthProvider } from './utils/AuthContext'; // app에서 navigation을 AuthProvider로 감싸야 함
+import MainComponent from './screens/myportfolio'; 
+import EmailScreen from './screens/email';
 
-export default function App() {
-  const [navigationButtons, setNavigationButtons] = useState([]);
-  const [selectedButton, setSelectedButton] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedSubTitle, setEditedSubTitle] = useState('');
-  const [editedContent, setEditedContent] = useState('');
-  const { token } = useAuth(); // 현재 로그인한 유저의 user, token
+const API_URL = 'http://172.20.10.8:8080/member/login';
 
 
-  console.log(token)
-  
-  const addNavigationButton = () => {
-    const newButton = {
-      title: `포트폴리오${navigationButtons.length + 1}`,
-      subTitle: `새로운 포트폴리오 ${navigationButtons.length + 1}`,
-      content: `새로운 내용 ${navigationButtons.length + 1}`,
-    };
 
-    setNavigationButtons([...navigationButtons, newButton]);
-  };
+function HomeScreen({ navigation }) {
+  const { login } = useAuth(); // login 중괄호로 감싸야 함
+  // user, token, login, logout: AuthContext.js에서 Provider로 제공(export 늑김)하는 것
 
-  const handleButtonPress = (button) => {
-    setSelectedButton(button);
-    setIsEditMode(false);
-    setEditedTitle(button.title);
-    setEditedSubTitle(button.subTitle);
-    setEditedContent(button.content);
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showErrorText, setShowErrorText] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const toggleEditMode = () => {
-    setIsEditMode(!isEditMode);
-  };
-
-  const handleTitleChange = (text) => {
-    setEditedTitle(text);
-  };
-
-  const handleSubTitleChange = (text) => {
-    setEditedSubTitle(text);
-  };
-
-  const handleContentChange = (text) => {
-    setEditedContent(text);
-  };
-
-  const handleSaveButton = async () => {
-    const updatedButtons = navigationButtons.map((button) => {
-      if (button === selectedButton) {
-        return { ...button, title: editedTitle, subTitle: editedSubTitle, content: editedContent };
-      }
-      return button;
-    });
-
-    setNavigationButtons(updatedButtons);
-    setIsEditMode(false);
-
-    const data = {
-      title: String(editedTitle),
-      urllink: String(editedSubTitle),
-      description: String(editedContent),
-    };
-
+  const handleLogin = async () => {
     try {
-      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', token);
-      console.log('서버 응답 데이터:', response.data);
+      const response = await axios.post(API_URL, {
+        email: email,
+        password: password,
+      });
+      console.log(response.data.userId);
 
-      // 여기서 서버 응답 데이터를 활용할 수 있습니다.
-      // 예: 성공 메시지를 출력하거나 다른 동작을 수행할 수 있습니다.
+      if (response.status === 200) { // 응답이 200이면 으로 바꿔야 함
+        console.log(response.data.token);
+        setShowSuccessMessage(true);
+        setShowErrorText(false);
+        setErrorMessage('');
+        const token = response.data.token;
+        const userInfo = { id: response.data.userId, name: response.data.username };
+        
+        login(token, userInfo);
+
+        console.log('login successfull');
+
+        // navigation.navigate('Main'); // main.js 화면으로 이동
+      } else {
+        setShowSuccessMessage(false);
+        setShowErrorText(true);
+
+        if (response.data.error) {
+          setErrorMessage(response.data.error);
+        } else {
+          setErrorMessage('아이디 또는 비밀번호가 올바르지 않습니다.');
+        }
+      }
     } catch (error) {
-      console.error('에러 발생:', error);
+      console.error('Error logging in:', error);
+      setErrorMessage('로그인 중에 오류가 발생했습니다.');
+      setShowSuccessMessage(false);
+      setShowErrorText(true);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.homeButton}>
-          <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
+    <LinearGradient
+      colors={['#E2D0F8', '#A0BFE0']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.linearGradient}
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>안녕, 수정이</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="아이디"
+          value={email} // 아이디로 로그인하는 거니까 username이 아니라 email
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="비밀번호"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>로그인</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>포트폴리오 관리</Text>
-      </View>
-      <View style={styles.nav}>
-        <LinearGradient
-          colors={['#E2D0F8', '#A0BFE0']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.linearGradient}
-        >
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navContent}>
-            {navigationButtons.map((button, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.navButton,
-                  selectedButton === button && styles.selectedNavButton,
-                ]}
-                onPress={() => handleButtonPress(button)}
-              >
-                <Text style={styles.navButtonText}>{button.title}</Text>
-                <Text style={styles.portfolioNavTitle}>{button.subTitle}</Text>
-              </TouchableOpacity>
-            ))}
-            <TouchableOpacity style={styles.navButtonPlus} onPress={addNavigationButton}>
-              <Text style={styles.navButtonTextPlus}>추가</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </LinearGradient>
-      </View>
-
-      <View style={styles.main}>
-        <View style={styles.portfolioInfo}>
-          <Text style={styles.portfolioName}>{editedTitle}</Text>
-          <TouchableOpacity style={styles.editButton} onPress={toggleEditMode}>
-            <Text style={styles.editButtonText}>{isEditMode ? '완료' : '수정'}</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.name}>서가은 수정</Text>
-        <Text style={styles.infoLabel}>포트폴리오 제목</Text>
-        <TextInput
-          style={styles.infoInput}
-          value={editedTitle}
-          onChangeText={handleTitleChange}
-          editable={isEditMode}
-        />
-        <Text style={styles.infoLabel}>포트폴리오 링크</Text>
-        <TextInput
-          style={styles.infoInput}
-          value={editedSubTitle}
-          onChangeText={handleSubTitleChange}
-          editable={isEditMode}
-        />
-        <Text style={styles.infoLabel}>내용</Text>
-        <TextInput
-          style={styles.bigInfoInput}
-          multiline
-          numberOfLines={4}
-          value={editedContent}
-          onChangeText={handleContentChange}
-          editable={isEditMode}
-        />
-        {isEditMode && (
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveButton}>
-            <Text style={styles.saveButtonText}>저장하기</Text>
-          </TouchableOpacity>
+        {showSuccessMessage && (
+          <Text style={styles.successMessage}>로그인 성공</Text>
         )}
+        {showErrorText && (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        )}
+        <TouchableOpacity onPress={() => navigation.navigate('EmailScreen')}>
+          <Text style={styles.signupText}>계정이 없으신가요? <Text style={styles.signupLink}>회원가입</Text></Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </LinearGradient>
   );
 }
+
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    // app에서 navigation감싸야 함
+    // 안 감싸면 login 사용 불가
+    <AuthProvider> 
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Main"
+          component={MainComponent}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EmailScreen"
+          component={EmailScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+    </AuthProvider>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   linearGradient: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
   },
-  homeButton: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginTop:20,
-  },
-  headerTitle: {
-    color: 'black',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    marginTop:10,
-  },
-  nav: {
-    height: 80,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
-    overflow: 'hidden',
-  },
-  navContent: {
-    alignItems: 'flex-start',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  navButton: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    marginBottom:10,
-  },
-  navButtonText: {
-    color: 'rgba(74, 85, 162, 1)',
-    fontWeight: 'bold',
-  },
-  navButtonPlus: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: 'white',
-    borderStyle: 'dotted',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    marginBottom:10,
-  },
-  navButtonTextPlus: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  main: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    backgroundColor: 'white',
-  },
-  portfolioInfo: {
-    flexDirection: 'row',
+  container: {
+    padding: 50,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    marginTop: 80,
+  },
+  title: {
+    fontSize: 28,
+    color: 'white',
     marginBottom: 20,
   },
-  portfolioName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  editButton: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingVertical: 5,
+  input: {
+    width: 250,
+    height: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    marginBottom: 10,
     paddingHorizontal: 10,
+    borderRadius: 5,
+    color: 'rgba(131, 131, 131, 1)',
   },
-  editButtonText: {
-    color: 'rgba(74, 85, 162, 1)',
-    fontWeight: 'bold',
-  },
-  name: {
-    fontSize: 20,
-    marginBottom: 10,
-  },
-  infoLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  infoInput: {
-    backgroundColor: 'rgba(226, 208, 248, 0.3)',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginBottom: 10,
-  },
-  bigInfoInput: {
-    backgroundColor: 'rgba(226, 208, 248, 0.3)',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 10,
-    textAlignVertical: 'top',
-  },
-  saveButton: {
-    backgroundColor: 'rgba(160, 191, 224, 1)',
-    borderRadius: 20,
+  button: {
+    width: 150,
+    height: 40,
+    backgroundColor: 'rgba(166, 208, 253, 1)',
     paddingVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    elevation: 4,
   },
-  saveButtonText: {
+  buttonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontSize: 18,
+    textAlign: 'center',
   },
-  portfolioNavTitle: {
-    color: 'rgba(74, 85, 162, 1)',
+  successMessage: {
+    color: 'green',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
+  },
+  signupText: {
+    marginTop: 20,
+    color: 'white',
+    fontSize: 16,
+  },
+  signupLink: {
     fontWeight: 'bold',
-    fontSize: 12,
+    textDecorationLine: 'underline',
   },
 });

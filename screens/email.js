@@ -3,10 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Dimens
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
-import { useAuth } from './../utils/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
-
-export default function App() {
+export default function EmailScreen() {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -31,6 +31,8 @@ export default function App() {
       setShowErrorText(false);
 
       console.log('이메일 전송 응답:', response.data);
+
+      navigation.navigate('Register', { email: fullEmail });
     } catch (error) {
       console.error('이메일 전송 오류:', error);
       Alert.alert('오류', '이메일 전송에 실패했습니다. 다시 시도해주세요.');
@@ -42,7 +44,6 @@ export default function App() {
       const response = await axios.get(`http://3.39.104.119:8080/member/join/verify/${verificationCode}`);
       console.log(response.data);
       if (response.data === String(verificationCode)) {
-        
         setShowSuccessMessage(true);
         setShowErrorText(false);
       } else {
@@ -55,8 +56,6 @@ export default function App() {
       setShowErrorText(true);
     }
   };
-
-  const windowWidth = Dimensions.get('window').width;
 
   return (
     <LinearGradient
@@ -195,13 +194,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18,
     textAlign: 'center',
-  },
-  commitTextCenter: {
-    color: 'white',
-    fontSize: 15,
-    marginBottom: 10,
-    bottom: 15,
-    alignSelf: 'center',
   },
   verificationInput: {
     width: 250,

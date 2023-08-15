@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Linking, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
+import { useRoute } from '@react-navigation/native'; // 라우트 훅 가져오기
+
 
 const openLink = () => {
   Linking.openURL('#');
@@ -13,8 +15,11 @@ export default function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
+//  const [email, setEmail] = useState('');
   const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const route = useRoute(); // 라우트 훅 사용
+  const { email } = route.params; // 네비게이션 파라미터에서 email 값 가져오기
+
 
   const handleRegister = () => {
     if (password !== confirmPassword) {

@@ -35,7 +35,7 @@ function HomeScreen({ navigation }) {
         setErrorMessage('');
         const token = response.data.token;
         const userInfo = { id: response.data.userId, name: response.data.username }; // 사용자 정보
-        auth.login(token, userInfo); // 토큰 및 사용자 정보 저장
+                auth.login(token, userInfo); // 토큰 및 사용자 정보 저장
         navigation.navigate('Main'); // main.js 화면으로 이동
       } else {
         setShowSuccessMessage(false);
