@@ -5,9 +5,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth, AuthProvider } from './utils/AuthContext'; // app에서 navigation을 AuthProvider로 감싸야 함
-import MainComponent from './screens/myportfolio'; 
-import EmailScreen from './screens/email';
+import { useAuth, AuthProvider } from './../utils/AuthContext'; // app에서 navigation을 AuthProvider로 감싸야 함
+import MainComponent from './myportfolio'; 
+import EmailScreen from './email';
 
 const API_URL = 'http://172.20.10.8:8080/member/login';
 
