@@ -1,26 +1,19 @@
 // App.js
-
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useAuth } from './../utils/AuthContext'; // AuthContext에서 useAuth 가져오기
 
 const API_URL = 'http://3.39.104.119:8080/member/login';
 
 import MainComponent from './myportfolio'; // main.js 파일의 컴포넌트를 import
-
-function EmailScreen({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>회원가입</Text>
-      {/* 이곳에 회원가입 화면 내용을 작성하십시오. */}
-    </View>
-  );
-}
+import EmailScreen from './email'; // main.js 파일의 컴포넌트를 import
 
 function HomeScreen({ navigation }) {
+  const auth = useAuth(); // useAuth 훅을 통해 AuthContext 사용
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -28,21 +21,21 @@ function HomeScreen({ navigation }) {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
-    if (!username || !password) {
-      setShowErrorText(true);
-      return;
-    }
-
     try {
       const response = await axios.post(API_URL, {
         email: String(username),
         password: String(password),
       });
+      console.log(response.data.userId);
 
       if (response.data.token) {
+        console.log(response.data.token);
         setShowSuccessMessage(true);
         setShowErrorText(false);
         setErrorMessage('');
+        const token = response.data.token;
+        const userInfo = { id: response.data.userId, name: response.data.username }; // 사용자 정보
+        auth.login(token, userInfo); // 토큰 및 사용자 정보 저장
         navigation.navigate('Main'); // main.js 화면으로 이동
       } else {
         setShowSuccessMessage(false);
@@ -107,7 +100,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-
         <Stack.Screen
           name="Main"
           component={MainComponent}

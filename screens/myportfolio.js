@@ -15,6 +15,8 @@ export default function App() {
   const { token } = useAuth(); // 현재 로그인한 유저의 user, token
 
 
+  console.log(token)
+  
   const addNavigationButton = () => {
     const newButton = {
       title: `포트폴리오${navigationButtons.length + 1}`,

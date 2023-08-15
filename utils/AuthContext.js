@@ -1,4 +1,5 @@
 // AuthContext.js
+// 사용자 인증 관련 저장
 import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
@@ -18,10 +19,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setToken(null);
     setUser(null);
-    // removeTokenAndUser(token, user);
   };
-
-  // const isAuthenticated = !!user; // 로그인 여부 확인
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
