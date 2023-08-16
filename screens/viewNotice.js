@@ -16,34 +16,9 @@ export default function App() {
           <TouchableOpacity style={styles.homeButton}>
             <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>게시물 목록</Text>
+          <Text style={styles.headerTitle}>공지사항</Text>
         </View>
       </LinearGradient>
-      <View style={styles.nav}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navContent}>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>전체</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>기획</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>아이디어</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>브랜드/네이밍</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>광고/마케팅</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>사진</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButtonText}>개발/프로그래밍</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
 
       <View style={styles.main}>
         <ScrollView contentContainerStyle={styles.activityList}>
@@ -103,29 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
-  },
-  nav: {
-    height: 80,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
-    overflow: 'hidden',
-  },
-  navContent: {
-    alignItems: 'flex-start',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  navButton: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  navButtonText: {
-    color: 'rgba(74, 85, 162, 1)',
-    fontWeight: 'bold',
   },
   main: {
     flex: 1,
