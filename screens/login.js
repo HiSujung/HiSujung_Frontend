@@ -12,7 +12,7 @@ import EmailScreen from './email'; // main.js 파일의 컴포넌트를 import
 import ActivityScreen from './Acitvity'; 
 import chatbotScreen from './chatBot'; 
 import NoticeScreen from './Notice'; 
-import portfolioScreen from './portfolio';
+
 import viewActivityScreen from './viewAcitivity';
 import viewNoticeScreen from './viewNotice';
 
@@ -130,11 +130,6 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="myportfolioScreen"
-          component={myportfolioScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name="EmailScreen"
           component={EmailScreen}
           options={{ headerShown: false }}
@@ -146,7 +141,27 @@ export default function App() {
         />
         <Stack.Screen
           name="Activity"
-          component={RegisterScreen}
+          component={ActivityScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="chatBot"
+          component={chatbotScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Notice"
+          component={NoticeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="viewAcitivity"
+          component={viewActivityScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="viewNotice"
+          component={viewNoticeScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
