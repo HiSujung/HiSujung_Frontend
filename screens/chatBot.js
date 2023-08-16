@@ -1,83 +1,152 @@
-import React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
-import freeIconHome7478461 from '../assets/splash.png';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export function ChatScreen() {
+const ChatScreen = () => {
+  const [messages, setMessages] = useState([
+    { text: 'Hello! This is a user message.', user: 'user' },
+    { text: 'This is a response from the bot.', user: 'bot' },
+  ]); // State to store messages
+  const [messageText, setMessageText] = useState(''); 
+
+  const sendMessage = () => {
+    if (messageText.trim() !== '') {
+      
+      setMessages([...messages, { text: messageText, user: 'user' }]);
+      setMessageText(''); 
+    }
+  };
+
   return (
-    <View style={styles.root}>
-      {/* Header */}
-      <View style={styles.rectangle23} />
-      <Text style={styles.headerText}>Chat</Text>
-
-      {/* Chat Content */}
-      <View style={styles.rectangle24}>
-        {/* Chat messages go here */}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>ChatBot</Text>
+        <TouchableOpacity style={styles.backButton}>
+          <Text>뒤로가기</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Input Box */}
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.mainView}>
+          {messages.map((message, index) => (
+            <View
+              key={index}
+              style={
+                message.user === 'user' ? styles.userBubble : styles.otherBubble
+              }
+            >
+              {message.user === 'bot' && (
+                <View style={styles.profileImage}>
+                  <Icon name="android" style={styles.robotIcon} />
+                </View>
+              )}
+              <Text>{message.text}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Type your message..."
+          style={styles.inputText}
+          placeholder="무엇을 도와드릴까요?"
+          value={messageText}
+          onChangeText={(text) => setMessageText(text)}
         />
-        <TouchableOpacity style={styles.sendButton}>
-          <Text style={styles.sendButtonText}>Send</Text>
+        <TouchableOpacity
+          style={styles.sendButton}
+          onPress={sendMessage}
+        >
+          <Text>Send</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  root: {
-    width: 360,
-    height: 640,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  rectangle23: {
-    width: 360,
-    height: 62,
-    backgroundColor: 'rgba(74, 85, 162, 1)', // Use your header background color here
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1, 
+    backgroundColor: '#D1CCF0',
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  headerText: {
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  backButton: {
+    padding: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#EDEDED',
+    borderRadius: 10,
+  },
+  contentContainer: {
+    paddingTop: 80, 
+    paddingBottom: 60, 
+  },
+  mainView: {
+    flex: 1,
+    padding: 20,
+  },
+  userBubble: {
+    alignSelf: 'flex-end',
+    width: '60%',
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#EDEDED',
+    marginBottom: 10,
+  },
+  otherBubble: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '70%',
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#EBDFFA',
+    marginBottom: 10,
+  },
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#C9D0FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  robotIcon: {
+    fontSize: 20,
     color: '#000',
-    fontSize: 15,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginTop: 15,
-  },
-  rectangle24: {
-    width: 360,
-    height: 442, // Adjust the height as needed
-    backgroundColor: '#FFF',
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    padding: 10,
+    borderTopWidth: 1,
+    borderColor: '#EDEDED',
+    backgroundColor: 'white',
   },
-  input: {
+  inputText: {
     flex: 1,
-    height: 40,
-    borderColor: '#A0BFE0',
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 12,
+    borderRadius: 10,
+    backgroundColor: '#EDEDED',
+    padding: 10,
   },
   sendButton: {
-    marginLeft: 12,
-    backgroundColor: 'rgba(74, 85, 162, 1)', // Use your send button background color here
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  sendButtonText: {
-    color: '#FFF',
-
-    fontSize: 15,
-    fontWeight: '700',
+    padding: 10,
+    backgroundColor: '#EDEDED',
+    borderRadius: 10,
+    marginLeft: 10,
   },
 });
 
 export default ChatScreen;
-
