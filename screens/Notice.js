@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native';  // Import TouchableOpacity
+import { TouchableOpacity } from 'react-native';
 
+export default function NoticeScreen() {
+  const [heartFilled, setHeartFilled] = useState(false);
 
-export default function App() {
+  const toggleHeart = () => {
+    setHeartFilled(!heartFilled);
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -18,7 +23,7 @@ export default function App() {
           <View style={styles.homeButton}>
             <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
           </View>
-          <Text style={styles.headerTitle}>게시물 목록</Text>
+          <Text style={styles.headerTitle}>공지사항</Text>
         </View>
       </LinearGradient>
       <View style={styles.nav}>
@@ -29,7 +34,6 @@ export default function App() {
 
       <View style={styles.main}>
         <ScrollView contentContainerStyle={styles.activityList}>
-          {/* 활동 1 */}
           <TouchableOpacity style={styles.activityItem}>
             <View style={styles.activityDetails}>
               <Text style={styles.activityCategory}>대외활동</Text>
@@ -42,9 +46,15 @@ export default function App() {
               활동 소개 내용이 들어갑니다. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Nulla ut feugiat erat. Sed in urna eget lorem fermentum blandit.
             </Text>
+            <TouchableOpacity style={styles.heartButton} onPress={toggleHeart}>
+              <AntDesign
+                name={heartFilled ? 'heart' : 'hearto'}
+                size={20}
+                color={heartFilled ? 'red' : 'black'}
+              />
+            </TouchableOpacity>
           </TouchableOpacity>
-          {/* 활동 2 */}
-          {/* 활동 3 */}
+          {/* 다른 활동들 */}
         </ScrollView>
       </View>
     </View>
@@ -89,24 +99,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
-  navButton: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  navButtonText: {
-    color: 'rgba(74, 85, 162, 1)',
-    fontWeight: 'bold',
-  },
-  main: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    backgroundColor: 'white',
-  },
   activityList: {
     flexDirection: 'column',
     alignItems: 'stretch',
@@ -126,23 +118,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 5,
   },
-  activityCategory: {
-    fontWeight: 'bold',
-    color: 'rgba(74, 85, 162, 1)',
-  },
-  activityDday: {
-    fontWeight: 'bold',
-  },
-  activityItemTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  activitySubTitle: {
-    fontSize: 14,
-    color: 'rgba(74, 85, 162, 1)',
-    marginBottom: 5,
-  },
-  activityDescription: {
-    fontSize: 14,
+  heartButton: {
+    marginTop: 10,
+    alignItems: 'flex-end',
   },
 });

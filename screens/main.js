@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
+import NoticeScreen from './Notice'; 
+import ActivityScreen from './Acitvity'; 
 
 const Stack = createStackNavigator();
 
@@ -25,16 +27,16 @@ function MainComponent({ navigation }) {
               <Text style={styles.buttonText}>포트폴리오 {'\n'} 관리</Text>
             </TouchableOpacity>
             <View style={styles.buttonGroup}>
-              <TouchableOpacity style={[styles.button, styles.secondButton, { backgroundColor: '#DAD2DE', borderColor: 'transparent' }]}>
-                <Text style={styles.buttonText}>교내활동 {'\n'} 조회</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')} style={[styles.button, styles.secondButton, { backgroundColor: '#DAD2DE', borderColor: 'transparent' }]}>
+                <Text style={styles.buttonText}>공지사항 {'\n'} 조회</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.thirdButton, { backgroundColor: 'white', borderColor: '#6A6FB3' }]}>
+              <TouchableOpacity onPress={() => navigation.navigate('ActivityScreen')} style={[styles.button, styles.thirdButton, { backgroundColor: 'white', borderColor: '#6A6FB3' }]}>
                 <Text style={[styles.buttonText, { color: '#6A6FB3' }]}>대외활동 {'\n'} 조회</Text>
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.content2}>
-            <Text style={styles.content2title}>오늘의 추천 활동</Text>
+            <Text style={styles.content2title} >오늘의 추천 활동</Text>
             <View style={styles.innerContent}>
               <TouchableOpacity style={styles.todayRecommand}>
                 <Text style={styles.innerSmalltxt}>대외활동</Text>
@@ -178,6 +180,16 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen
+            name="Activity"
+            component={ActivityScreen}
+            options={{ headerShown: false }}
+          />
+        <Stack.Screen
+          name="Notice"
+          component={NoticeScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
             name="myportfolioScreen"
             component={myportfolioScreen}
