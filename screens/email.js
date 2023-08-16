@@ -4,8 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import RegisterScreen from './register'; // main.js 파일의 컴포넌트를 import
 
-export default function EmailScreen() {
+
+function EmailScreen() {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
@@ -31,8 +33,6 @@ export default function EmailScreen() {
       setShowErrorText(false);
 
       console.log('이메일 전송 응답:', response.data);
-
-      navigation.navigate('Register', { email: fullEmail });
     } catch (error) {
       console.error('이메일 전송 오류:', error);
       Alert.alert('오류', '이메일 전송에 실패했습니다. 다시 시도해주세요.');
@@ -40,12 +40,17 @@ export default function EmailScreen() {
   };
 
   const handleVerificationSubmit = async () => {
+
     try {
       const response = await axios.get(`http://3.39.104.119:8080/member/join/verify/${verificationCode}`);
       console.log(response.data);
       if (response.data === String(verificationCode)) {
         setShowSuccessMessage(true);
         setShowErrorText(false);
+        navigation.navigate('Register', {
+          screen: "Register",
+          email: email + "@sungshin.ac.kr" });
+    
       } else {
         setShowSuccessMessage(false);
         setShowErrorText(true);
@@ -107,7 +112,7 @@ export default function EmailScreen() {
       </ScrollView>
     </LinearGradient>
   );
-}
+}export default EmailScreen;
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;

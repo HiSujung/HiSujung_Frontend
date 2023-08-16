@@ -5,16 +5,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth } from './../utils/AuthContext'; // AuthContext에서 useAuth 가져오기
-
-const API_URL = 'http://3.39.104.119:8080/member/login';
-
-import MainComponent from './myportfolio'; // main.js 파일의 컴포넌트를 import
+import { useAuth, AuthProvider } from './../utils/AuthContext'; // app에서 navigation을 AuthProvider로 감싸야 함
+import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
+import RegisterScreen from './register';
 import EmailScreen from './email'; // main.js 파일의 컴포넌트를 import
 
+
+const API_URL = 'http://172.20.10.8:8080/member/login';
+
+
+
 function HomeScreen({ navigation }) {
-  const auth = useAuth(); // useAuth 훅을 통해 AuthContext 사용
-  const [username, setUsername] = useState('');
+  const { login } = useAuth(); // login 중괄호로 감싸야 함
+  // user, token, login, logout: AuthContext.js에서 Provider로 제공(export 늑김)하는 것
+
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorText, setShowErrorText] = useState(false);
@@ -23,20 +28,24 @@ function HomeScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       const response = await axios.post(API_URL, {
-        email: String(username),
-        password: String(password),
+        email: email,
+        password: password,
       });
       console.log(response.data.userId);
 
-      if (response.data.token) {
+      if (response.status === 200) { // 응답이 200이면 으로 바꿔야 함
         console.log(response.data.token);
         setShowSuccessMessage(true);
         setShowErrorText(false);
         setErrorMessage('');
         const token = response.data.token;
-        const userInfo = { id: response.data.userId, name: response.data.username }; // 사용자 정보
-                auth.login(token, userInfo); // 토큰 및 사용자 정보 저장
-        navigation.navigate('Main'); // main.js 화면으로 이동
+        const userInfo = { id: response.data.userId, name: response.data.username };
+        
+        login(token, userInfo);
+
+        console.log('login successfull');
+
+        // navigation.navigate('Main'); // main.js 화면으로 이동
       } else {
         setShowSuccessMessage(false);
         setShowErrorText(true);
@@ -67,14 +76,14 @@ function HomeScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="아이디"
-          value={username}
-          onChangeText={text => setUsername(text)}
+          value={email} // 아이디로 로그인하는 거니까 username이 아니라 email
+          onChangeText={setEmail}
         />
         <TextInput
           style={styles.input}
           placeholder="비밀번호"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={setPassword}
           secureTextEntry
         />
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -98,16 +107,24 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    // app에서 navigation감싸야 함
+    // 안 감싸면 login 사용 불가
+    <AuthProvider> 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
-          name="Main"
-          component={MainComponent}
+          name="Home"
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Main"
+          component={myportfolioScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="myportfolioScreen"
+          component={myportfolioScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -115,8 +132,14 @@ export default function App() {
           component={EmailScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }
 

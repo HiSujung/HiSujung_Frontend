@@ -9,10 +9,11 @@ const openLink = () => {
   Linking.openURL('#');
 };
 
-export default function App() {
+export default function RegisterScreen({navigation}) {
   const [selectedDepartment, setSelectedDepartment] = useState("학과1");
   const [selectedValue, setSelectedValue] = useState("select");
   const [username, setUsername] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 //  const [email, setEmail] = useState('');
@@ -66,6 +67,7 @@ export default function App() {
           style={styles.input}
           placeholder="이메일"
           value={email}
+          editable={isEditMode}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
