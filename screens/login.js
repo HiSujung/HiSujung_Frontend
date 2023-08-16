@@ -9,6 +9,13 @@ import { useAuth, AuthProvider } from './../utils/AuthContext'; // app에서 nav
 import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
 import RegisterScreen from './register';
 import EmailScreen from './email'; // main.js 파일의 컴포넌트를 import
+import ActivityScreen from './Acitvity'; 
+import chatbotScreen from './chatBot'; 
+import NoticeScreen from './Notice'; 
+import portfolioScreen from './portfolio';
+import viewActivityScreen from './viewAcitivity';
+import viewNoticeScreen from './viewNotice';
+
 
 
 const API_URL = 'http://172.20.10.8:8080/member/login';
@@ -134,6 +141,11 @@ export default function App() {
         />
         <Stack.Screen
           name="Register"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Activity"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
