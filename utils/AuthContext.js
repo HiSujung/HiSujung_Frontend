@@ -1,6 +1,7 @@
 // AuthContext.js
 // 사용자 인증 관련 저장
 import React, { createContext, useContext, useState } from 'react';
+import myportfolioScreen from "../screens/myportfolio"
 
 const AuthContext = createContext();
 
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
+      <myportfolioScreen token={token}/>
     </AuthContext.Provider>
   );
 };
