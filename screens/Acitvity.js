@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function App() {
+
+export default function ActivityScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
