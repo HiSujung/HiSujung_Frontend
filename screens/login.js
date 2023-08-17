@@ -1,58 +1,52 @@
 // App.js
+
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth, AuthProvider } from './../utils/AuthContext'; // app에서 navigation을 AuthProvider로 감싸야 함
-import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
-import RegisterScreen from './register';
-import EmailScreen from './email'; // main.js 파일의 컴포넌트를 import
-import ActivityScreen from './Acitvity'; 
-import chatbotScreen from './chatBot'; 
-import NoticeScreen from './Notice'; 
-import mainScreen from './main';
-import viewActivityScreen from './viewAcitivity';
-import viewNoticeScreen from './viewNotice';
 
+const API_URL = 'http://3.39.104.119:8080/member/login';
+let tokenProps="NULL";
 
+import MainComponent from './myportfolio'; // main.js 파일의 컴포넌트를 import
 
-const API_URL = 'http://172.20.10.8/member/login';
-
-
+function EmailScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>회원가입</Text>
+    </View>
+  );
+}
 
 function HomeScreen({ navigation }) {
-  const { login } = useAuth(); // login 중괄호로 감싸야 함
-  // user, token, login, logout: AuthContext.js에서 Provider로 제공(export 늑김)하는 것
-
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorText, setShowErrorText] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [token, setToken] = useState(''); // token을 추가하고 초기값을 빈 문자열로 설정
+  tokenProps=token;
   const handleLogin = async () => {
+    if (!username || !password) {
+      setShowErrorText(true);
+      return;
+    }
+
     try {
       const response = await axios.post(API_URL, {
-        email: email,
-        password: password,
+        email: String(username),
+        password: String(password),
       });
-      console.log(response.data.userId);
 
-      if (response.status === 200) { // 응답이 200이면 으로 바꿔야 함
-        console.log(response.data.token);
+      if (response.data.token) {
         setShowSuccessMessage(true);
         setShowErrorText(false);
         setErrorMessage('');
-        const token = response.data.token;
-        const userInfo = { id: response.data.userId, name: response.data.username };
-        
-        login(token, userInfo);
-
-        console.log('login successfull');
-
-        navigation.navigate('Home'); // main.js 화면으로 이동
+        setToken(response.data.token); // token 값을 설정
+        tokenProps=response.data.token;
+        navigation.navigate('Main'); // main.js 화면으로 이동
       } else {
         setShowSuccessMessage(false);
         setShowErrorText(true);
@@ -83,14 +77,14 @@ function HomeScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="아이디"
-          value={email} // 아이디로 로그인하는 거니까 username이 아니라 email
-          onChangeText={setEmail}
+          value={username}
+          onChangeText={text => setUsername(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="비밀번호"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={text => setPassword(text)}
           secureTextEntry
         />
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -113,20 +107,19 @@ function HomeScreen({ navigation }) {
 const Stack = createStackNavigator();
 
 export default function App() {
+  
   return (
-    // app에서 navigation감싸야 함
-    // 안 감싸면 login 사용 불가
-    <AuthProvider> 
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
+
         <Stack.Screen
-          name="Home"
-          component={mainScreen}
+          name="Main"
+          component={() => <MainComponent token={tokenProps} />} // token을 MainComponent로 전달
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="myportfolioScreen"
-          component={myportfolioScreen}
+          name="Home"
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -134,39 +127,8 @@ export default function App() {
           component={EmailScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Activity"
-          component={ActivityScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="chatBot"
-          component={chatbotScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Notice"
-          component={NoticeScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="viewAcitivity"
-          component={viewActivityScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="viewNotice"
-          component={viewNoticeScreen}
-          options={{ headerShown: false }}
-        />
       </Stack.Navigator>
     </NavigationContainer>
-    </AuthProvider>
   );
 }
 

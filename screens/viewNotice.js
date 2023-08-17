@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text,TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -22,6 +22,18 @@ export default function NoticeScreen(props) {
       </LinearGradient>
 
       <View style={styles.main}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="무엇을 검색하시나요?"
+          />
+          <TouchableOpacity
+            style={styles.sendButton}
+            //onPress={}
+          >
+            <Text>검색</Text>
+        </TouchableOpacity>
+        </View>
         <ScrollView contentContainerStyle={styles.activityList}>
           {/* 활동 1 */}
           <TouchableOpacity style={styles.activityItem}>
@@ -113,5 +125,29 @@ const styles = StyleSheet.create({
   activityItemTitle: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  inputContainer: {
+    width:"70%",
+    height:"5%",
+    marginBottom:20,
+    flexDirection: 'row',
+    alignItems: 'right',
+    padding: 1,
+    borderColor: '#EDEDED',
+    backgroundColor: 'white',
+  },
+  inputText: {
+    flex: 1,
+    borderRadius: 1,
+    backgroundColor: '#EDEDED',
+    padding: 1,
+    fontSize:10,
+  },
+  sendButton: {
+    padding: 3,
+    fontSize:10,
+    backgroundColor: 'rgba(74, 85, 162, 1)',
+    borderRadius: 5,
+    marginLeft: 10,
   },
 });

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 const ChatScreen = () => {
+  const navigation = useNavigation();
+
   const [messages, setMessages] = useState([
     { text: 'Hello! This is a user message.', user: 'user' },
     { text: 'This is a response from the bot.', user: 'bot' },
@@ -21,7 +24,7 @@ const ChatScreen = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>ChatBot</Text>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.backButton}>
           <Text>뒤로가기</Text>
         </TouchableOpacity>
       </View>
@@ -75,6 +78,7 @@ const styles = StyleSheet.create({
     zIndex: 1, 
     backgroundColor: '#D1CCF0',
     padding: 20,
+    paddingTop:40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

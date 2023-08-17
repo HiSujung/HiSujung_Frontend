@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import RegisterScreen from './register'; // main.js 파일의 컴포넌트를 import
 
 
 function EmailScreen() {
@@ -71,9 +70,10 @@ function EmailScreen() {
     >
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.headingContainer}>
-          <TouchableOpacity style={styles.backButton}>
-            <AntDesign name="arrowleft" size={20} color="white" />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.backButton}>
+          <AntDesign name="arrowleft" size={20} color="white" />
+        </TouchableOpacity>
+
           <Text style={styles.title}>이메일 인증</Text>
         </View>
         <Text style={styles.subtitle}>인증번호 입력</Text>
@@ -113,6 +113,8 @@ function EmailScreen() {
     </LinearGradient>
   );
 }export default EmailScreen;
+
+
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;

@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 
@@ -14,25 +11,61 @@ export default function myportfolioScreen(props) {
   const [editedTitle, setEditedTitle] = useState('');
   const [editedSubTitle, setEditedSubTitle] = useState('');
   const [editedContent, setEditedContent] = useState('');
-  const { navigation, token } = props; // navigation과 token을 추출
-  //const token = props.token;
+  const { navigation, token } = props;
 
-  const addNavigationButton = () => {
+  useEffect(() => {
+    async function fetchPortfolioList() {
+      try {
+        console.log(token);
+        const response = await axios.get('http://3.39.104.119:8080/portfolio/portfoliolist');
+        const portfolioList = response.data.data;
+
+        const newButtons = portfolioList.map(item => ({
+          id: item.id,
+          title: item.title,
+          urlLink: item.urlLink,
+          description: item.description,
+        }));
+
+        setNavigationButtons(newButtons);
+      } catch (error) {
+        console.error('에러 발생:', error);
+      }
+    }
+
+    fetchPortfolioList();
+  }, []);
+
+  const addNavigationButton = async () => {
     const newButton = {
       title: `포트폴리오${navigationButtons.length + 1}`,
-      subTitle: `새로운 포트폴리오 ${navigationButtons.length + 1}`,
-      content: `새로운 내용 ${navigationButtons.length + 1}`,
+      urlLink: `새로운 포트폴리오 ${navigationButtons.length + 1}`,
+      description: `새로운 내용 ${navigationButtons.length + 1}`,
     };
 
-    setNavigationButtons([...navigationButtons, newButton]);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', newButton, config);
+      console.log('서버 응답 데이터:', response.data.data);
+
+      const newPortfolio = { ...newButton, id: response.data.data };
+      setNavigationButtons([...navigationButtons, newPortfolio]);
+    } catch (error) {
+      console.error('에러 발생:', error);
+    }
   };
 
   const handleButtonPress = (button) => {
     setSelectedButton(button);
     setIsEditMode(false);
     setEditedTitle(button.title);
-    setEditedSubTitle(button.subTitle);
-    setEditedContent(button.content);
+    setEditedSubTitle(button.urlLink);
+    setEditedContent(button.description);
   };
 
   const toggleEditMode = () => {
@@ -52,37 +85,41 @@ export default function myportfolioScreen(props) {
   };
 
   const handleSaveButton = async () => {
-    const updatedButtons = navigationButtons.map((button) => {
-      if (button === selectedButton) {
-        return { ...button, title: editedTitle, subTitle: editedSubTitle, content: editedContent };
+    if (selectedButton) {
+      const updatedData = {
+        title: String(editedTitle),
+        urllink: String(editedSubTitle),
+        description: String(editedContent),
+      };
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      try {
+        console.log(selectedButton.id);
+        const response = await axios.post(`http://3.39.104.119:8080/portfolio/update/${selectedButton.id}`, updatedData, config);
+        console.log('서버 응답 데이터:', response.data);
+  
+        // 여기서 서버 응답 데이터를 활용할 수 있습니다.
+        // 예: 성공 메시지를 출력하거나 다른 동작을 수행할 수 있습니다.
+      } catch (error) {
+        if (error.response) {
+          // 서버 응답에 문제가 있는 경우 (상태 코드 400 이상)
+          console.error('서버 응답 에러:', error.response.data.message);
+        } else if (error.request) {
+          // 서버로 요청을 보낼 때 문제가 있는 경우 (요청이 전송되지 않거나 응답이 없음)
+          console.error('서버 요청 에러:', error.request);
+        } else {
+          // 기타 에러 처리
+          console.error('에러 발생:', error.message);
+        }
       }
-      return button;
-    });
-
-    setNavigationButtons(updatedButtons);
-    setIsEditMode(false);
-
-    const data = {
-      title: String(editedTitle),
-      urllink: String(editedSubTitle),
-      description: String(editedContent),
-    };
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    try {
-      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', data, config);
-      console.log('서버 응답 데이터:', response.data);
-
-      // 여기서 서버 응답 데이터를 활용할 수 있습니다.
-      // 예: 성공 메시지를 출력하거나 다른 동작을 수행할 수 있습니다.
-    } catch (error) {
-      console.error('에러 발생:', error);
     }
+  
+    setIsEditMode(false);
   };
 
   return (
@@ -111,7 +148,7 @@ export default function myportfolioScreen(props) {
                 onPress={() => handleButtonPress(button)}
               >
                 <Text style={styles.navButtonText}>{button.title}</Text>
-                <Text style={styles.portfolioNavTitle}>{button.subTitle}</Text>
+                <Text style={styles.portfolioNavTitle}>{button.urlLink}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity style={styles.navButtonPlus} onPress={addNavigationButton}>
@@ -161,6 +198,7 @@ export default function myportfolioScreen(props) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -182,14 +220,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    marginTop:20,
+    marginTop: 20,
   },
   headerTitle: {
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
-    marginTop:10,
+    marginTop: 20,
   },
   nav: {
     height: 80,
@@ -208,7 +246,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     marginRight: 10,
-    marginBottom:10,
+    marginBottom: 10,
   },
   navButtonText: {
     color: 'rgba(74, 85, 162, 1)',
@@ -223,7 +261,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 15,
     marginRight: 10,
-    marginBottom:10,
+    marginBottom: 10,
   },
   navButtonTextPlus: {
     color: 'white',
@@ -284,6 +322,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
   },
   saveButtonText: {
     color: 'white',

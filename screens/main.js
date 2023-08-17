@@ -6,6 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
 import NoticeScreen from './viewNotice'; 
 import ViewActivityScreen from './viewAcitivity'; 
+import chatBotScreen from './chatBot'; 
+
+import { LoginApp } from './login'; // login.js에서 변경한 함수 가져오기
 
 const Stack = createStackNavigator();
 
@@ -45,7 +48,7 @@ function MainComponent({ navigation }) {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.chatBotButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('chatBotScreen')} style={styles.chatBotButton}>
           <Text style={styles.chatBotButtonText}>chatBot</Text>
         </TouchableOpacity>
       </View>
@@ -185,6 +188,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
+      <Stack.Screen
+            name="chatBotScreen"
+            component={chatBotScreen}
+            options={{ headerShown: false }}
+          />
         <Stack.Screen
             name="ActivityScreen"
             component={ViewActivityScreen}
