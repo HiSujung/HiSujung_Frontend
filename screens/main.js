@@ -27,7 +27,7 @@ function MainComponent({ navigation }) {
               <Text style={styles.buttonText}>포트폴리오 {'\n'} 관리</Text>
             </TouchableOpacity>
             <View style={styles.buttonGroup}>
-              <TouchableOpacity onPress={() => navigation.navigate('NoticeScreen')} style={[styles.button, styles.secondButton, { backgroundColor: '#DAD2DE', borderColor: 'transparent' }]}>
+              <TouchableOpacity onPress={() => navigation.navigate('Notice')} style={[styles.button, styles.secondButton, { backgroundColor: '#DAD2DE', borderColor: 'transparent' }]}>
                 <Text style={styles.buttonText}>공지사항 {'\n'} 조회</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate('ActivityScreen')} style={[styles.button, styles.thirdButton, { backgroundColor: 'white', borderColor: '#6A6FB3' }]}>
@@ -176,6 +176,11 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
+
+
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -185,16 +190,17 @@ export default function App() {
             component={ActivityScreen}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="myportfolioScreen"
+            component={myportfolioScreen}
+            options={{ headerShown: false }}
+          />
         <Stack.Screen
           name="Notice"
           component={NoticeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-            name="myportfolioScreen"
-            component={myportfolioScreen}
-            options={{ headerShown: false }}
-          />
+
         <Stack.Screen
           name="Main"
           component={MainComponent}
@@ -202,6 +208,7 @@ export default function App() {
         />
 
       </Stack.Navigator>
+
     </NavigationContainer>
   );
 }
