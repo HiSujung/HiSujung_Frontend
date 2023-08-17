@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
-import { useAuth } from './../utils/AuthContext';
 
-export default function App(props) {
+export default function myportfolioScreen(props) {
   const [navigationButtons, setNavigationButtons] = useState([]);
   const [selectedButton, setSelectedButton] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
   const [editedSubTitle, setEditedSubTitle] = useState('');
   const [editedContent, setEditedContent] = useState('');
-  
-  const { token } = useAuth(); // 현재 로그인한 유저의 user, token
+  const { navigation, token } = props; // navigation과 token을 추출
+  //const token = props.token;
 
-
-  console.log(token)
-  
   const addNavigationButton = () => {
     const newButton = {
       title: `포트폴리오${navigationButtons.length + 1}`,
@@ -69,8 +68,14 @@ export default function App(props) {
       description: String(editedContent),
     };
 
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     try {
-      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', token);
+      const response = await axios.post('http://3.39.104.119:8080/portfolio/new', data, config);
       console.log('서버 응답 데이터:', response.data);
 
       // 여기서 서버 응답 데이터를 활용할 수 있습니다.
@@ -83,7 +88,7 @@ export default function App(props) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.homeButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
           <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>포트폴리오 관리</Text>
