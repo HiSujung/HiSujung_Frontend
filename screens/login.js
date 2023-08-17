@@ -12,13 +12,13 @@ import EmailScreen from './email'; // main.js 파일의 컴포넌트를 import
 import ActivityScreen from './Acitvity'; 
 import chatbotScreen from './chatBot'; 
 import NoticeScreen from './Notice'; 
-
+import mainScreen from './main';
 import viewActivityScreen from './viewAcitivity';
 import viewNoticeScreen from './viewNotice';
 
 
 
-const API_URL = 'http://172.20.10.8:8080/member/login';
+const API_URL = 'http://172.20.10.8/member/login';
 
 
 
@@ -52,7 +52,7 @@ function HomeScreen({ navigation }) {
 
         console.log('login successfull');
 
-        // navigation.navigate('Main'); // main.js 화면으로 이동
+        navigation.navigate('Home'); // main.js 화면으로 이동
       } else {
         setShowSuccessMessage(false);
         setShowErrorText(true);
@@ -121,11 +121,11 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"
-          component={HomeScreen}
+          component={mainScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Main"
+          name="myportfolioScreen"
           component={myportfolioScreen}
           options={{ headerShown: false }}
         />

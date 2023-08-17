@@ -1,10 +1,84 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Button } from 'react-native'; // Import TouchableOpacity
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from './../utils/AuthContext';
 
+const API_URL = 'http://192.168.0.27:8080/externalact/id';
+const R_API_URL = 'http://3.39.104.119:5000/recommend/univ?activity_name=60';
 
-export default function ActivityScreen() {
+export default function ActivityScreen({ route }) {
+    const { activityId } = route.params;
+    const [activityData, setActivityData] = useState({});
+    const [recActivityData, setRecActivityData] = useState({});
+    const { token } = useAuth();
+    const navigation = useNavigation();
+  
+    useEffect(() => {
+      fetchActivityDetail();
+      fetchRecActivityDetail();
+    }, []);
+  
+    const fetchActivityDetail = async () => {
+        const headers = {
+            Authorization: `Bearer ${token}`
+          };
+
+      try {
+        const response = await axios.get(`${API_URL}?id=${activityId}`, { headers });
+        if (response.status === 200) {
+          setActivityData(response.data);
+          // if (activityData && activityData.content) {
+          //   const formattedContent = activityData.content.replace(/\n/g, '\n');
+          //   console.log('content: ' + formattedContent);
+          // } else {
+          //   console.log('activityData or content is undefined');
+          // }
+        }
+      } catch (error) {
+        console.error('Error fetching activity detail:', error);
+      }
+      
+    };
+
+    // Frommated Content
+    const handleReplace = () => {
+      if (activityData && activityData.content) {
+        return activityData.content.replaceAll('\\n', "\n");
+      } else {
+        console.log('activityData or content is undefined');
+        return '';
+      }
+    };
+    const formattedContent = handleReplace();
+
+    // Get List of Recommend System
+    const fetchRecActivityDetail = async () => {
+      const headers = {
+          Authorization: `Bearer ${token}`
+        };
+
+    try {
+      const response = await axios.get(R_API_URL);
+      if (response.status === 200) {
+        setRecActivityData(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching activity detail:', error);
+    }
+    
+  };
+
+    const handleActListPress = () => {
+        navigation.navigate('ActList'); 
+      };
+
+      const handleActivityPress = () => {
+        navigation.navigate('Activity');
+      };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -17,55 +91,80 @@ export default function ActivityScreen() {
           <View style={styles.homeButton}>
             <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
           </View>
-          <Text style={styles.headerTitle}>게시물 목록</Text>
+          <TouchableOpacity  onPress={handleActListPress}>
+            <Text style={styles.headerTitle}>게시물 목록</Text>
+            </TouchableOpacity>
         </View>
       </LinearGradient>
       <View style={styles.nav}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.navContent}>
-          {/* 네비 버튼들 */}
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>전체</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>기획</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>아이디어</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>브랜드/네이밍</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>광고/마케팅</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>사진</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton}>
+            <Text style={styles.navButtonText}>개발/프로그래밍</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
 
       <View style={styles.main}>
         <ScrollView contentContainerStyle={styles.activityList}>
-          {/* 활동 1 */}
-          <TouchableOpacity style={styles.activityItem}>
+          <View style={styles.activityItem}>
             <View style={styles.activityDetails}>
               <Text style={styles.activityCategory}>대외활동</Text>
-              <Text style={styles.activityDday}>D-10</Text>
+              {/* <Text style={styles.activityDday}>D-10</Text> */}
             </View>
-            <Text style={styles.activityItemTitle}>활동 1</Text>
-            <Text style={styles.activitySubTitle}>대외활동 제목 1</Text>
-            <Text style={styles.activitySubTitle}>마감일: 2023-09-01</Text>
-            <Text style={styles.activityDescription}>
-              활동 소개 내용이 들어갑니다. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Nulla ut feugiat erat. Sed in urna eget lorem fermentum blandit.
-            </Text>
-          </TouchableOpacity>
-          {/* 활동 2 */}
-          
-          {/* 활동 3 */}
+            <ScrollView>
+            <Text style={styles.activityItemTitle}>{activityData.title}</Text>
+            <Text style={styles.activitySubTitle}>{activityData.link}</Text>
+            <Text style={styles.activityDescription}>{formattedContent}</Text>
+            </ScrollView>
+            </View>
         </ScrollView>
 
         {/* 추천 게시물 */}
         <View style={styles.recommended}>
-          <Text style={styles.recommendedTitle}>추천 게시물</Text>
+          {/* <Text style={styles.recommendedTitle}>추천 게시물</Text>
+          <FlatList
+            data={setRecActivityData}
+            keyExtractor={(item) => item.id.toString()} // Assuming 'id' is a unique identifier
+            renderItem={({ item }) => (
+              <TouchableOpacity
+              style={styles.recommendedItem}
+                onPress={() => navigation.navigate('Activity', { activityId: item.id })} // Pass the activityId to the 'Activity' screen
+              >
+               <Text style={styles.recommendedItemTitle}>{item.title}</Text>
+             </TouchableOpacity>
+          )}
+          /> */}
+
           <TouchableOpacity style={styles.recommendedItem}>
             <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
-            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
           </TouchableOpacity>
           {/* 여기에 3개 더 추가 */}
           <TouchableOpacity style={styles.recommendedItem}>
             <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
-            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.recommendedItem}>
             <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
-            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.recommendedItem}>
             <Text style={styles.recommendedItemTitle}>추천 게시물 1</Text>
-            <Text style={styles.recommendedItemDate}>마감일: 2023-09-15</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -132,7 +231,7 @@ const styles = StyleSheet.create({
   activityList: {
     flexDirection: 'column',
     alignItems: 'stretch',
-    height: '80%', // Adjusted height to make room for recommended items
+    height: '90%', // Adjusted height to make room for recommended items
   },
   activityItem: {
     width: '100%',
@@ -156,6 +255,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   activityItemTitle: {
+    paddingTop:10,
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -165,6 +265,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   activityDescription: {
+    paddingTop:10,
     fontSize: 14,
   },
   recommended: {

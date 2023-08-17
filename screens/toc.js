@@ -43,7 +43,7 @@ const ChatListScreen = () => {
   };
 
   useEffect(() => {
-    fetchUserChatRooms();
+    fetchUserChatRooms();  
     if (route.params?.updated) {
       // 업데이트된 채팅 목록을 가져와서 상태 업데이트
       fetchUserChatRooms();

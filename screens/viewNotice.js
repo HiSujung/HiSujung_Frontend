@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function App() {
+export default function NoticeScreen(props) {
+  const { navigation } = props; // navigation과 token을 추출
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -13,7 +14,7 @@ export default function App() {
         style={styles.linearGradient}
       >
         <View style={styles.header}>
-          <TouchableOpacity style={styles.homeButton}>
+          <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
             <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>공지사항</Text>
@@ -64,8 +65,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginTop:20,
   },
   homeButton: {
     backgroundColor: 'white',

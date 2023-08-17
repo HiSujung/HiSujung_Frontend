@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
 
-export default function App() {
+export default function App(props) { //prop으로 stack에서 스크린 받아온거 받아오기
+  const { navigation } = props; // navigation을 추출
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -13,7 +15,7 @@ export default function App() {
         style={styles.linearGradient}
       >
         <View style={styles.header}>
-          <TouchableOpacity style={styles.homeButton}>
+          <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.homeButton}>
             <AntDesign name="home" size={24} color="rgba(74, 85, 162, 1)" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>게시물 목록</Text>
@@ -90,13 +92,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
   },
   homeButton: {
     backgroundColor: 'white',
     borderRadius: 10,
     paddingVertical: 5,
     paddingHorizontal: 10,
+    marginTop:10,
   },
   headerTitle: {
     color: 'black',
