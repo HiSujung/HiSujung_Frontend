@@ -4,8 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import myportfolioScreen from './myportfolio'; // myportfolio.js 파일의 컴포넌트를 import
-import NoticeScreen from './Notice'; 
-import ActivityScreen from './Acitvity'; 
+import NoticeScreen from './viewNotice'; 
+import ViewActivityScreen from './viewAcitivity'; 
 
 const Stack = createStackNavigator();
 
@@ -186,8 +186,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
-            name="Activity"
-            component={ActivityScreen}
+            name="ActivityScreen"
+            component={ViewActivityScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
